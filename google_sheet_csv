@@ -1,0 +1,39 @@
+
+// This will create a new custom menu where you can easily run the code to send an email
+function onOpen(e) {
+   SpreadsheetApp.getUi()
+       .createMenu('Custom')
+       .addItem('Send Email', 'SendEmail')
+       .addToUi();
+ }
+
+// Script for sending the email
+
+function onlyToAddTheDriveScope() {
+	DriveApp.getRootFolder();
+}
+
+function getDate() {
+	var date = new Date();
+	var dateofDay = new Date(date.getTime());
+	return Utilities.formatDate(dateofDay, "GMT+06:00", "dd-MM-yyyy hh:mm:ss a"); // set to central time
+}
+
+function SendEmail()
+{
+  var ssID = SpreadsheetApp.getActiveSpreadsheet().getId();
+  var sheetName = SpreadsheetApp.getActiveSpreadsheet().getName();
+
+  var email = Session.getActiveUser().getEmail();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheets()[0];
+  var cell = "email@email.com,email2@email.com"; //enter one or multiple emails here seperated by a comma
+  var subject = "Backup File "+getDate(); // email subject
+  var body = "Attched is the report"; // email body
+  var requestData = {"method": "GET", "headers":{"Authorization":"Bearer "+ScriptApp.getOAuthToken()}};
+  var url = "https://docs.google.com/spreadsheets/YOUR URL HERE/export?format=csv&gid=0"; // replace the placeholder text with your spreadsheets url
+  var result = UrlFetchApp.fetch(url, requestData);
+  var contents = result.getContent();
+
+	MailApp.sendEmail(cell, subject, body, {attachments:[{fileName:sheetName+".txt", content:contents, mimeType:"application//txt"}]});
+}
