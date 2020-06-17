@@ -9,10 +9,6 @@ function onOpen(e) {
 
 // Script for sending the email
 
-function onlyToAddTheDriveScope() {
-	DriveApp.getRootFolder();
-}
-
 function getDate() {
 	var date = new Date();
 	var dateofDay = new Date(date.getTime());
@@ -26,7 +22,7 @@ function SendEmail()
 
   var email = Session.getActiveUser().getEmail();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheets()[0];
+  var sheet = ss.getSheets()[0]; // spreadsheet with id 0
   var cell = "email@email.com,email2@email.com"; //enter one or multiple emails here seperated by a comma
   var subject = "Backup File "+getDate(); // email subject
   var body = "Attched is the report"; // email body
